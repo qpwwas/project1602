@@ -1,29 +1,22 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 export default function Register() {
-  // useState: значения полей
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // общая валидность + успех отправки
   const [isValid, setIsValid] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  // локальные ошибки (вычисление), чтобы не дублировать логику
   const errors = useMemo(() => {
-    const nameErr =
-      name.trim().length >= 3 ? "" : "Имя должно быть не менее 3 символов.";
-    const emailErr = email.includes("@")
-      ? ""
-      : 'Email должен содержать символ "@".';
-    const passErr =
-      password.length >= 6 ? "" : "Пароль должен быть не менее 6 символов.";
-
-    return { name: nameErr, email: emailErr, password: passErr };
+    return {
+      name: name.trim().length >= 3 ? "" : "Имя должно быть не менее 3 символов.",
+      email: email.includes("@") ? "" : 'Email должен содержать символ "@".',
+      password:
+        password.length >= 6 ? "" : "Пароль должен быть не менее 6 символов."
+    };
   }, [name, email, password]);
 
-  // useEffect: вычисляем общую валидность формы на основе ошибок
   useEffect(() => {
     const ok = !errors.name && !errors.email && !errors.password;
     setIsValid(ok);
@@ -35,7 +28,6 @@ export default function Register() {
 
     setSubmitted(true);
 
-    // имитация успешной отправки
     setTimeout(() => {
       setName("");
       setEmail("");
@@ -44,117 +36,81 @@ export default function Register() {
   };
 
   return (
-    <div className="grid2">
-      <div className="card">
-        <div className="cardTitle">Регистрация</div>
-        <div className="cardSubtitle">
-          Реактивная валидация: useState + useEffect
-        </div>
+    <div style={{ maxWidth: 720, margin: "0 auto" }}>
+      <h1 style={{ color: "white" }}>Регистрация</h1>
+      <p style={{ color: "rgba(255,255,255,0.7)" }}>
+        Реактивная валидация: useState + useEffect
+      </p>
 
-        <form className="form" onSubmit={onSubmit}>
-          <label className="field">
-            <span className="fieldLabel">Имя</span>
-            <input
-              className="input"
-              value={name}
-              onChange={(e) => {
-                setSubmitted(false);
-                setName(e.target.value);
-              }}
-              placeholder="Например: Ayan"
-            />
-            {name.length > 0 && errors.name && (
-              <div className="error">{errors.name}</div>
-            )}
-          </label>
-
-          <label className="field">
-            <span className="fieldLabel">Email</span>
-            <input
-              className="input"
-              value={email}
-              onChange={(e) => {
-                setSubmitted(false);
-                setEmail(e.target.value);
-              }}
-              placeholder="name@example.com"
-            />
-            {email.length > 0 && errors.email && (
-              <div className="error">{errors.email}</div>
-            )}
-          </label>
-
-          <label className="field">
-            <span className="fieldLabel">Пароль</span>
-            <input
-              className="input"
-              type="password"
-              value={password}
-              onChange={(e) => {
-                setSubmitted(false);
-                setPassword(e.target.value);
-              }}
-              placeholder="Минимум 6 символов"
-            />
-            {password.length > 0 && errors.password && (
-              <div className="error">{errors.password}</div>
-            )}
-          </label>
-
-          <button className="btn" type="submit" disabled={!isValid}>
-            Создать аккаунт
-          </button>
-
-          {submitted && isValid && (
-            <div className="successBox" style={{ marginTop: 14 }}>
-              <span className="successDot" />
-              <span>Успешно! Аккаунт создан (демо-режим).</span>
-            </div>
+      <form onSubmit={onSubmit} style={{ display: "grid", gap: 12, marginTop: 16 }}>
+        <label style={{ display: "grid", gap: 6 }}>
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>Имя</span>
+          <input
+            value={name}
+            onChange={(e) => {
+              setSubmitted(false);
+              setName(e.target.value);
+            }}
+            placeholder="Например: Ayan"
+            style={{ padding: 10, borderRadius: 10 }}
+          />
+          {name.length > 0 && errors.name && (
+            <span style={{ color: "#ff6b6b" }}>{errors.name}</span>
           )}
+        </label>
 
-          <div className="muted" style={{ marginTop: 8 }}>
-            Кнопка активируется только при валидности всех полей.
+        <label style={{ display: "grid", gap: 6 }}>
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>Email</span>
+          <input
+            value={email}
+            onChange={(e) => {
+              setSubmitted(false);
+              setEmail(e.target.value);
+            }}
+            placeholder="name@example.com"
+            style={{ padding: 10, borderRadius: 10 }}
+          />
+          {email.length > 0 && errors.email && (
+            <span style={{ color: "#ff6b6b" }}>{errors.email}</span>
+          )}
+        </label>
+
+        <label style={{ display: "grid", gap: 6 }}>
+          <span style={{ color: "rgba(255,255,255,0.7)" }}>Пароль</span>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => {
+              setSubmitted(false);
+              setPassword(e.target.value);
+            }}
+            placeholder="Минимум 6 символов"
+            style={{ padding: 10, borderRadius: 10 }}
+          />
+          {password.length > 0 && errors.password && (
+            <span style={{ color: "#ff6b6b" }}>{errors.password}</span>
+          )}
+        </label>
+
+        <button
+          type="submit"
+          disabled={!isValid}
+          style={{
+            padding: 12,
+            borderRadius: 12,
+            fontWeight: 800,
+            cursor: isValid ? "pointer" : "not-allowed"
+          }}
+        >
+          Создать аккаунт
+        </button>
+
+        {submitted && isValid && (
+          <div style={{ color: "#4ade80", fontWeight: 700 }}>
+            ✅ Успешно! Аккаунт создан (демо-режим).
           </div>
-        </form>
-      </div>
-
-      <div className="card">
-        <div className="cardTitle">Правила валидации</div>
-        <div className="divider" />
-
-        <div className="list">
-          <div className="listItem">
-            <div className="dot" />
-            <div>
-              <div className="listTitle">Имя</div>
-              <div className="muted">Не менее 3 символов.</div>
-            </div>
-          </div>
-
-          <div className="listItem">
-            <div className="dot" />
-            <div>
-              <div className="listTitle">Email</div>
-              <div className="muted">Содержит символ "@".</div>
-            </div>
-          </div>
-
-          <div className="listItem">
-            <div className="dot" />
-            <div>
-              <div className="listTitle">Пароль</div>
-              <div className="muted">Не менее 6 символов.</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="infoBox" style={{ marginTop: 14 }}>
-          <span className="infoDot" />
-          <span>
-            Важно: мы не изменяем state напрямую — только через setState.
-          </span>
-        </div>
-      </div>
+        )}
+      </form>
     </div>
   );
 }
