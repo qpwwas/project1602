@@ -6,15 +6,13 @@ export default function Settings() {
     <div className="grid2">
       <div className="card">
         <div className="cardTitle">Настройки</div>
-        <div className="cardSubtitle">
-          Отслеживание внешних событий браузера
-        </div>
+        <div className="cardSubtitle">Отслеживание внешних событий</div>
 
         <div className="divider" />
 
         <div className="muted">
-          Компонент реагирует на изменение размеров окна браузера и корректно
-          очищает обработчик события при размонтировании.
+          Компонент ниже подписывается на событие <b>resize</b> и
+          корректно отписывается при размонтировании (cleanup).
         </div>
       </div>
 
